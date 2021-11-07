@@ -35,7 +35,6 @@ public class TestMain {
                 .qos(MqttQos.EXACTLY_ONCE)
                 .build();
         client1.subscribe(subscribeMessage)*/
-       // ((Mqtt5Client )client1).;
         
         
         //ref : hivemq-mqtt-client/examples/src/main/java/com/hivemq/client/mqtt/examples/Mqtt5Features.java /

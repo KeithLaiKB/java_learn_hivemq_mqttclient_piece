@@ -18,8 +18,19 @@ import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Complete;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Send;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishResult;
-
-public class TestMain {
+/**
+ * 
+ * 
+ * <p>
+ * 							description:																			</br>	
+ * &emsp;						use different value to publish message each time 									</br>	
+ * 																													</br>
+ *
+ *
+ * @author laipl
+ *
+ */
+public class TestMain_modified {
 
 
 	public static void main(String[] args) {
@@ -27,8 +38,8 @@ public class TestMain {
         //String topic        = "MQTT Examples";
         String topic        = "sensors/temperature";
         //String content      = "Message from MqttPublishSample";
-        //String content      = "你好";
-        String content      = "hi_myfriend";
+        String content      = "你好";
+        //String content      = "hi_myfriend";
         int qos             = 2;
         //String broker       = "tcp://iot.eclipse.org:1883";
         String broker       = "tcp://localhost:1883";
@@ -54,7 +65,7 @@ public class TestMain {
         Mqtt5AsyncClient client1 = Mqtt5Client.builder().serverAddress(LOCALHOST_EPHEMERAL1).identifier(clientId).buildAsync();
         
         client1.connect();
-        for(int i=0;i<=200-1;i++) {
+        for(int i=0;i<=1000-1;i++) {
         	String str_content_tmp = content +":"+(i+1);
         	//client1.publishWith().topic(topic).qos(MqttQos.AT_LEAST_ONCE).payload(content.getBytes()).send();
         	
@@ -87,7 +98,6 @@ public class TestMain {
         	//
         	//
         	// 第B1种写法 ref: hivemq-mqtt-client/examples/src/main/java/com/hivemq/client/mqtt/examples/Mqtt5Features.java / 
-        	//client1.publishWith().topic(topic).qos(MqttQos.AT_LEAST_ONCE).payload(content.getBytes()).send();
         	// 这个是一口气就能写完的, 这种 和 A1和A2的调用效果是一样的  因为他说 Fluent counterpart of publish(Mqtt5Publish)
         	/*client1.publishWith().topic(topic).qos(MqttQos.AT_LEAST_ONCE).payload(contentTmp.getBytes()).send();*/
         	
@@ -104,7 +114,7 @@ public class TestMain {
         		});
         	
         	try {
-    			Thread.sleep(5000);
+        		Thread.sleep(3000);
     		} catch (InterruptedException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
@@ -112,38 +122,9 @@ public class TestMain {
         }
         
 
-        
-        //CompletableFuture a = CompletableFuture.runAsync(()->{ int b=1; int c = b+1;});
-        //CompletableFuture a2 = CompletableFuture.completedFuture("kk");
-
         client1.disconnect();
         
-        /*
-        try {
-            MqttClient sampleClient = new MqttClient(broker, clientId, persistence);
-            MqttConnectionOptions connOpts = new MqttConnectionOptions();
-            connOpts.setCleanStart(true);
-            System.out.println("Connecting to broker: "+broker);
-            sampleClient.connect(connOpts);
-            System.out.println("Connected");
-            System.out.println("Publishing message: "+content);
-            MqttMessage message = new MqttMessage(content.getBytes());
-            message.setQos(qos);
-            sampleClient.publish(topic, message);
-            System.out.println("Message published");
-            //
-            //sampleClient.disconnect();
-            //System.out.println("Disconnected");
-            //System.exit(0);
-        } catch(MqttException me) {
-            System.out.println("reason "+me.getReasonCode());
-            System.out.println("msg "+me.getMessage());
-            System.out.println("loc "+me.getLocalizedMessage());
-            System.out.println("cause "+me.getCause());
-            System.out.println("excep "+me);
-            me.printStackTrace();
-        }
-        */
+
     }
 
 }
