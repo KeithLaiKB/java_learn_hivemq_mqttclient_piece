@@ -15,8 +15,7 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder;
-import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Complete;
-import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Send;
+import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilderBase;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishResult;
 /**
  * 
@@ -88,9 +87,9 @@ public class TestMain_modified {
         	// 第A2种写法 是A1写法的拆分而已
         	Mqtt5PublishBuilder publishBuilder1= Mqtt5Publish.builder();
         	//
-        	Complete c1 = publishBuilder1.topic(topic);
+        	com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Complete c1 = publishBuilder1.topic(topic);
         	c1.qos(MqttQos.AT_LEAST_ONCE);
-        	c1.payload(contentTmp.getBytes());
+        	c1.payload(str_content_tmp.getBytes());
         	//
         	Mqtt5Publish publishMessage = c1.build();
         	client1.publish(publishMessage);
@@ -103,16 +102,24 @@ public class TestMain_modified {
         	
         	
         	// 第B2种写法 ref: hivemq-mqtt-client/examples/src/main/java/com/hivemq/client/mqtt/examples/Mqtt5Features.java / 
-        	Send<CompletableFuture<Mqtt5PublishResult>>  publishBuilder1 = client1.publishWith();
+        	// 首先这里先用了 pulishWith();
+        	// 因为 MqttPublishBuilder.Send<P> -> Mqtt5PublishBuilder.Send.Complete<P> -> Mqtt5PublishBuilder.Send<P>
+        	com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Send<CompletableFuture<Mqtt5PublishResult>>  publishBuilder1 = client1.publishWith();
+        	// 因为Mqtt5PublishBuilder.Send.Complete 	->  Mqtt5PublishBuilder.Send	-> Mqtt5PublishBuilderBase 
+        	// ->MqttPublishBuilder.Send			->  MqttPublishBuilder.Base		-> MqttPublishBuilder
+        	// 于是找到了topic(str_topic)的方法
         	com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Send.Complete<CompletableFuture<Mqtt5PublishResult>> c1 = publishBuilder1.topic(topic);
         	c1.qos(MqttQos.AT_LEAST_ONCE);
         	c1.payload(str_content_tmp.getBytes());
+        	// send(): the result when the built Mqtt5Publish is sent by the parent.
         	c1.send().thenAccept((result)->{
         		String sendedCtnTemp = new String(result.getPublish().getPayloadAsBytes());		//如果用 Qos0(MqttQos.AT_MOST_ONCE) 也可以获得内容的
         		System.out.println(sendedCtnTemp);
         		
         		});
         	
+
+    		
         	try {
         		Thread.sleep(3000);
     		} catch (InterruptedException e) {
