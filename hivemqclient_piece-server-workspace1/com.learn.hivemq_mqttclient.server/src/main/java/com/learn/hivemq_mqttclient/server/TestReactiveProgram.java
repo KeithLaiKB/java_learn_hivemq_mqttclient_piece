@@ -65,5 +65,8 @@ public class TestReactiveProgram {
 			e.printStackTrace();
 		}
 		System.out.println(result1);
+		
+		
+		//可以看出 就算是sleep 了5000ms, num1还是不会有改变
 	}
 }
