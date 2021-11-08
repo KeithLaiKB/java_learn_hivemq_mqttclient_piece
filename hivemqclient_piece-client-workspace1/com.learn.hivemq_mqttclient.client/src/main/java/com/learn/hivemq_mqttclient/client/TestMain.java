@@ -44,6 +44,7 @@ public class TestMain {
         client1
         .subscribeWith()
         .topicFilter(topic)
+        .qos(MqttQos.AT_LEAST_ONCE)
         .callback(publish -> System.out.println("received message: " + publish + "////"+ new String(publish.getPayloadAsBytes())) ) 	// set callback
         .send();		//subscribe callback and something 
         System.out.println("enter to exit!!!!!!!!!!!!!!!!!!!!!!!!!!!");
