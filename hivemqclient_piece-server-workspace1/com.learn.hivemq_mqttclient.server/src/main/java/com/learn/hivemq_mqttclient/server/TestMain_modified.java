@@ -136,6 +136,7 @@ public class TestMain_modified {
         	//
         	//------------------------------- 第 A2 种写法 --------------------------------------
         	// 第A2种写法 是A1写法的拆分而已
+        	/*
         	Mqtt5PublishBuilder publishBuilder1= Mqtt5Publish.builder();
         	//
         	com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Complete c1 = publishBuilder1.topic(topic);
@@ -145,6 +146,7 @@ public class TestMain_modified {
         	Mqtt5Publish publishMessage = c1.build();
         	client1.publish(publishMessage);
         	System.out.println(str_content_tmp);
+        	*/
         	//
         	/*
         	//A2方法中的 
@@ -171,7 +173,7 @@ public class TestMain_modified {
         	//
         	//
         	//------------------------------- 第 B2 种写法 --------------------------------------
-        	/*
+        	
         	// 第B2种写法 ref: hivemq-mqtt-client/examples/src/main/java/com/hivemq/client/mqtt/examples/Mqtt5Features.java / 
         	// 首先这里先用了 pulishWith();
         	// 因为 MqttPublishBuilder.Send<P> -> Mqtt5PublishBuilder.Send.Complete<P> -> Mqtt5PublishBuilder.Send<P>
@@ -182,12 +184,12 @@ public class TestMain_modified {
         	com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Send.Complete<CompletableFuture<Mqtt5PublishResult>> c1 = publishBuilder1.topic(topic);
         	c1.qos(MqttQos.AT_LEAST_ONCE);
         	c1.payload(str_content_tmp.getBytes());
-        	*/
-        	/*
+        	
+
         	// send(): the result when the built Mqtt5Publish is sent by the parent
         	c1.send();
         	System.out.println(str_content_tmp);
-        	*/
+        	
         	
         	
         	/*
