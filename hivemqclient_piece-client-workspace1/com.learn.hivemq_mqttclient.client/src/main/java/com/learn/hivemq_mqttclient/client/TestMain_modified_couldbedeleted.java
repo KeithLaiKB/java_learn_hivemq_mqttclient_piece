@@ -1,22 +1,28 @@
 package com.learn.hivemq_mqttclient.client;
 
 import java.net.InetSocketAddress;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient.Mqtt5SubscribeAndCallbackBuilder;
 import com.hivemq.client.mqtt.mqtt5.message.connect.connack.Mqtt5ConnAck;
 
-public class TestMain_modified {
+public class TestMain_modified_couldbedeleted {
 
 	public static void main(String[] args) {
 
         //String topic        = "MQTT Examples";
-        String topic        = "sensors/temperature";
+        String topic        = "zigbee2mqtt/0x00124b00250c256f";
+        //String topic        = "zigbee2mqtt/example/extensionOGChange1";
         //String content      = "Message from MqttPublishSample";
         String content      = "receiver";
         int qos             = 0;
@@ -26,9 +32,10 @@ public class TestMain_modified {
         String clientId     = "JavaSample_revcevier";
         //MemoryPersistence persistence = new MemoryPersistence();
 
-        final InetSocketAddress LOCALHOST_EPHEMERAL1 = new InetSocketAddress("localhost",1883);
+        final InetSocketAddress LOCALHOST_EPHEMERAL1 = new InetSocketAddress("135.0.237.84",1883);
         //Mqtt5Client sampleClient = new Mqtt5Client(broker, clientId, persistence);
-        Mqtt5AsyncClient client1 = Mqtt5Client.builder().serverAddress(LOCALHOST_EPHEMERAL1).identifier(clientId).buildAsync();
+        //Mqtt5AsyncClient client1 = Mqtt5Client.builder().serverAddress(LOCALHOST_EPHEMERAL1).identifier(clientId).buildAsync();
+        Mqtt5AsyncClient client1 = Mqtt5Client.builder().serverAddress(LOCALHOST_EPHEMERAL1).buildAsync();
         //Mqtt5Client client1 = Mqtt5Client.builder().identifier(clientId).build();
         /*
         Mqtt5Subscribe subscribeMessage = Mqtt5Subscribe.builder()
@@ -56,11 +63,6 @@ public class TestMain_modified {
     			e.printStackTrace();
     		}
     	}
-    	
-    	
-    	// 或者 注意这里的 timeout填-1的效果 和 pahomqtt不同, 这里timeout填-1 就相当于不wait, 好像跟0一样
-    	// CompletableFuture<Mqtt5ConnAck> cplfu_connect_rslt1 = client1.connect().orTimeout(timeout, TimeUnit.MILLISECONDS);
-    	
 		System.out.println("connected");
         
         
@@ -89,7 +91,27 @@ public class TestMain_modified {
         //Mqtt5SubscribeAndCallbackBuilder.Start.Complete c1 = subscribeBuilder1.topicFilter(topic);
         Mqtt5SubscribeAndCallbackBuilder.Start.Complete c1 = subscribeBuilder1.topicFilter(topic);
         c1.qos(MqttQos.AT_LEAST_ONCE);
-        c1.callback(publish -> System.out.println("received message: " + publish + "////"+ new String(publish.getPayloadAsBytes())) ); 	// set callback
+        c1.callback(publish -> {
+        	
+        	String jsonRsTmp = new String(publish.getPayloadAsBytes());
+        	//
+        	//
+        	ObjectMapper mapperTmp = new ObjectMapper();
+        	LinkedHashMap<String,Object> lkhMapTmp1 = null;
+        	TypeReference<LinkedHashMap<String,Object>> tpRfTmp1  = new TypeReference<LinkedHashMap<String,Object>>() {};
+        	//
+        	try {
+        		lkhMapTmp1 = mapperTmp.readValue(jsonRsTmp, tpRfTmp1);
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	System.out.println("received message: " + publish + "////"+ new String(publish.getPayloadAsBytes()));
+        	System.out.println("received message content(state): " + lkhMapTmp1.get("state"));
+        }); 	// set callback
         c1.send();		//subscribe callback and something 
         
         

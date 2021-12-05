@@ -10,6 +10,26 @@
             <artifactId>hivemq-mqtt-client</artifactId>
             <version>1.2.2</version>
         </dependency>
+        
+        
+        
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+	<!-- 自己玩的时候用到而已, 可以随时删除 -->
+	<dependency>
+    	<groupId>com.fasterxml.jackson.core</groupId>
+    	<artifactId>jackson-core</artifactId>
+    	<version>2.13.0</version>
+	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+	<!-- 自己玩的时候用到而已, 可以随时删除 -->
+	<dependency>
+    	<groupId>com.fasterxml.jackson.core</groupId>
+    	<artifactId>jackson-databind</artifactId>
+    	<version>2.13.0</version>
+	</dependency>
+	
+        
     </dependencies>
   
   
