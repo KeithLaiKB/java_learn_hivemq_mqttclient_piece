@@ -46,7 +46,16 @@ public class TestMain_modified {
         // 只是我选择 用段时间等待而已
         CompletableFuture<Mqtt5ConnAck> cplfu_connect_rslt = client1.connect();
         //wait
-    	while (cplfu_connect_rslt.isDone() == false) {
+        // 注意!!!!!!!!!
+    	// while (cplfu_connect_rslt.isDone() == false) {
+        // 如果 像上面这句, 不加上 cplfu_connect_rslt.isCompletedExceptionally() == true , 
+        // 就会出现 broker 即使关闭了, 它也会认为是 isDone, 只不过是属于 complete exceptionally, 
+        // for循环结束, 进行发送, 然而此时是connect失败的, 这种发送 broker是接受不到的
+        // 
+        // 所以 我要加多一个条件就是 || cplfu_connect_rslt.isCompletedExceptionally() == true 
+        // 如果 未完成 或者 complete exceptionally 则一直等待, 有一点点类似于 MqttAsyncClient sampleClient.connect(connOpts, null, null).waitForCompletion(-1);
+    	// 但我暂时还 不知道 paho mqtt 会不会有 complete exceptionally 而且相关的处理方式!!!!
+        while (cplfu_connect_rslt.isDone() == false || cplfu_connect_rslt.isCompletedExceptionally() == true){
     		// 这里的 sleep 可以不用, 不影响主逻辑
     		// 只不过 这里加了个 sleep, 可以减少 不停地loop, 因为太多loop会给计算机带来的资源消耗
         	try {
