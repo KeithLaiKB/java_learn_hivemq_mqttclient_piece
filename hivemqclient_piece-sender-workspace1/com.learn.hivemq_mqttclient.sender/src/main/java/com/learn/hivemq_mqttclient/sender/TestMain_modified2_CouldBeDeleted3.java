@@ -37,7 +37,7 @@ public class TestMain_modified2_CouldBeDeleted3 {
 	public static void main(String[] args) {
 
         //String topic        = "MQTT Examples";
-        String topic        = "zigbee2mqtt/0x00124b00250c256f/set";
+        String topic        = "zigbee2mqtt/0x00124b00250c256f/get";
         //String content      = "Message from MqttPublishSample";
         String content      = "你好";
         //String content      = "hi_myfriend";
@@ -120,7 +120,7 @@ public class TestMain_modified2_CouldBeDeleted3 {
         for(int i=0;i<=1;i++) {
         	LinkedHashMap<String,Object> lhmap1 = new LinkedHashMap<>();
         	//lhmap1.put("linkquality", 132);
-        	lhmap1.put("state", "OFF");
+        	lhmap1.put("state", "");
         	//lhmap1.put("state", "ON");
         	//String str_content_tmp = "{\"linkquality\":,\"state\":\"OFF\"}";
         	//

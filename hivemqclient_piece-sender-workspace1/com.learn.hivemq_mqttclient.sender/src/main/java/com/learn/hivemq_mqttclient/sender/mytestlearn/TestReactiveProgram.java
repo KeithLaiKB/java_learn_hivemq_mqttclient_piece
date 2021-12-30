@@ -30,7 +30,7 @@ public class TestReactiveProgram {
 		// num1 = 0 	-> num1 +1 -> numTmp1
 		// -> numTmp1+1 -> numTmp2 -> result = 2
 		CompletableFuture<Integer> future1  = CompletableFuture.completedFuture("a").thenApply((s) -> { 
-			
+			System.out.println("kk:"+s);
 			Integer numTmp1 = num1+1;
 			System.out.println("hi:"+numTmp1);
 			return numTmp1;

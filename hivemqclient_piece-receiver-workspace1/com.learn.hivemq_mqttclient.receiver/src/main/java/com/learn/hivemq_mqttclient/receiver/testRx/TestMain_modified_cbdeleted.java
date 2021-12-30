@@ -1,26 +1,31 @@
-package com.learn.hivemq_mqttclient.receiver.tryzigbee;
+package com.learn.hivemq_mqttclient.receiver.testRx;
 
 import java.net.InetSocketAddress;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient.Mqtt5SubscribeAndCallbackBuilder;
 import com.hivemq.client.mqtt.mqtt5.message.connect.connack.Mqtt5ConnAck;
 
-public class TestMain_sf_plug {
+public class TestMain_modified_cbdeleted {
 
-	public static void main(String[] args){
+	public static void main(String[] args) {
 
         //String topic        = "MQTT Examples";
         String topic        = "zigbee2mqtt/0x00124b00250c256f";
         //String topic        = "zigbee2mqtt/example/extensionOGChange1";
         //String content      = "Message from MqttPublishSample";
         String content      = "receiver";
-        int qos             = 0;
+        int qos             = 1;
         //String broker       = "tcp://iot.eclipse.org:1883";
         String broker       = "tcp://localhost:1883";
         //String clientId     = "JavaSample";
@@ -86,20 +91,34 @@ public class TestMain_sf_plug {
         //Mqtt5SubscribeAndCallbackBuilder.Start.Complete c1 = subscribeBuilder1.topicFilter(topic);
         Mqtt5SubscribeAndCallbackBuilder.Start.Complete c1 = subscribeBuilder1.topicFilter(topic);
         c1.qos(MqttQos.AT_LEAST_ONCE);
-        c1.callback(publish -> 
-        	{
-        		System.out.println("received message: " + publish + "////"+ new String(publish.getPayloadAsBytes())); 
-            	try {
-            		Thread.sleep(1000);
-        		} catch (InterruptedException e) {
-        			// TODO Auto-generated catch block
-        			e.printStackTrace();
-        		}
-        		TestMain_sf_plug_tool tryStartTmp= new TestMain_sf_plug_tool();
-        		tryStartTmp.myStart();
-        		
-        	}		
-        ); 	// set callback
+        c1.callback(publish -> {
+        	
+        	String jsonRsTmp = new String(publish.getPayloadAsBytes());
+        	//
+        	//
+        	ObjectMapper mapperTmp = new ObjectMapper();
+        	LinkedHashMap<String,Object> lkhMapTmp1 = null;
+        	TypeReference<LinkedHashMap<String,Object>> tpRfTmp1  = new TypeReference<LinkedHashMap<String,Object>>() {};
+        	//
+        	try {
+        		lkhMapTmp1 = mapperTmp.readValue(jsonRsTmp, tpRfTmp1);
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	System.out.println("received message: " + publish + "////"+ new String(publish.getPayloadAsBytes()));
+        	System.out.println("received message content(state): " + lkhMapTmp1.get("state"));
+        	//
+        	//
+
+        });
+        /*.callback(s->{
+        	String jsonRsTmp = new String(s.getPayloadAsBytes());
+        	System.out.println("k"+ jsonRsTmp);
+        });*/ 	// set callback
         c1.send();		//subscribe callback and something 
         
         
