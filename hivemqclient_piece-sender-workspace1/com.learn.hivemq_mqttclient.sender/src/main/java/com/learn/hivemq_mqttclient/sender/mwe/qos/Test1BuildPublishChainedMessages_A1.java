@@ -29,27 +29,37 @@ import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishResult;
  * @author laipl
  *
  */
-public class Test1BuildPublishChainedMessages {
+public class Test1BuildPublishChainedMessages_A1 {
 
 	public static void main(String[] args) {
 
-		//String topic        = "MQTT Examples";
-		String topic = "sensors/temperature";
-		//String content      = "Message from MqttPublishSample";
-		String content = "你好";
-		//String content      = "hi_myfriend";
-		MqttQos qos = MqttQos.AT_MOST_ONCE;
-		//String broker       = "tcp://iot.eclipse.org:1883";
-		String broker = "tcp://localhost:1883";
-		//String broker       = "ssl://localhost:8883";
-		String clientId = "JavaSample";
+		//String topic        	= "MQTT Examples";
+		String topic 			= "sensors/temperature";
+		//String content      	= "Message from MqttPublishSample";
+		String content 			= "你好";
+		//String content      	= "hi_myfriend";
+		MqttQos qos 			= MqttQos.AT_MOST_ONCE;
+		//String broker      	= "tcp://iot.eclipse.org:1883";
+		String broker 			= "tcp://localhost:1883";
+		//String broker       	= "ssl://localhost:8883";
+		String clientId 		= "JavaSample";
 		//MemoryPersistence persistence = new MemoryPersistence();
 
 		//------------------------------- 创建 mqtt client --------------------------------------
 		final InetSocketAddress LOCALHOST_EPHEMERAL1 = new InetSocketAddress("localhost", 1883);
-
-		Mqtt5AsyncClient client1 = Mqtt5Client.builder().serverAddress(LOCALHOST_EPHEMERAL1).identifier(clientId)
-				.buildAsync();
+        //
+        //
+        //
+        //
+        //
+        //  builder.serverAddress是去   MqttRxClientBuilder 的父类的     MqttRxClientBuilderBase的 serverAddress
+        //  builder.buildAsync   是去  MqttRxClientBuilder 的父类的     MqttRxClientBuilderBase的 buildAsync
+        // 其过程中会经过
+        // MqttAsyncClient(final @NotNull MqttRxClient delegate) {
+        //    this.delegate = delegate;
+        // }
+        // 所以初步认为 MqttAsyncClient 是包含了 MqttRxClient 
+		Mqtt5AsyncClient client1 = Mqtt5Client.builder().serverAddress(LOCALHOST_EPHEMERAL1).identifier(clientId).buildAsync();
 
 		//------------------------------- client connect --------------------------------------
 		// 一定要注意 connect之后 如果不用thenAccept之类的方法, 就一定要 让他 等一等 , 等connect成功!!!!!!!!!!!!!!!!

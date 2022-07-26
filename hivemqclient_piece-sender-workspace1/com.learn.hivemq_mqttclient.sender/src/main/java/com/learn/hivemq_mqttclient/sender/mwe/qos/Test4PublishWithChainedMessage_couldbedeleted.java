@@ -26,12 +26,11 @@ import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishResult;
  * &emsp;						use different value to publish message each time 									</br>	
  * 																													</br>
  *
- *
- * 这个保留A1 A2, B1 B2 这些做法,试试有些他们被注释起来了而已
+ * 这个保留A1 A2, B1 B2 这些做法,试试有些他们被注释起来了而已 
  * @author laipl
  *
  */
-public class Test2BuildPublishSplitMessages {
+public class Test4PublishWithChainedMessage_couldbedeleted {
 
 	public static void main(String[] args) {
 
@@ -42,7 +41,7 @@ public class Test2BuildPublishSplitMessages {
         //String content      	= "hi_myfriend";
         MqttQos qos             = MqttQos.AT_MOST_ONCE;
         //String broker       	= "tcp://iot.eclipse.org:1883";
-        String broker       	= "tcp://localhost:1883";
+        String broker      		= "tcp://localhost:1883";
         //String broker       	= "ssl://localhost:8883";
         String clientId     	= "JavaSample";
         //MemoryPersistence persistence = new MemoryPersistence();

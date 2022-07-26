@@ -27,35 +27,28 @@ import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishResult;
  * 																													</br>
  *
  *
+ * 这个保留A1 A2, B1 B2 这些做法,试试有些他们被注释起来了而已
  * @author laipl
  *
  */
-public class Test3BuildPublishReactive {
-
+public class Test3BuildPublishReactive_couldbedeleted {
 
 	public static void main(String[] args) {
 
-        //String topic        = "MQTT Examples";
-        String topic        = "sensors/temperature";
-        //String content      = "Message from MqttPublishSample";
-        String content      = "你好";
-        //String content      = "hi_myfriend";
+        //String topic     		= "MQTT Examples";
+        String topic       		= "sensors/temperature";
+        //String content      	= "Message from MqttPublishSample";
+        String content      	= "你好";
+        //String content      	= "hi_myfriend";
         MqttQos qos             = MqttQos.AT_MOST_ONCE;
-        //String broker       = "tcp://iot.eclipse.org:1883";
-        String broker       = "tcp://localhost:1883";
-        //String broker       = "ssl://localhost:8883";
-        String clientId     = "JavaSample";
+        //String broker       	= "tcp://iot.eclipse.org:1883";
+        String broker       	= "tcp://localhost:1883";
+        //String broker       	= "ssl://localhost:8883";
+        String clientId     	= "JavaSample";
         //MemoryPersistence persistence = new MemoryPersistence();
 
-        
-        
-        
-        
-        
-        
-        
         //------------------------------- 创建 mqtt client --------------------------------------
-        final InetSocketAddress LOCALHOST_EPHEMERAL1 = new InetSocketAddress("localhost",1883);
+        final InetSocketAddress LOCALHOST_EPHEMERAL1 = new InetSocketAddress("localhost", 1883);
         //
         //
         //
@@ -69,10 +62,6 @@ public class Test3BuildPublishReactive {
         // }
         // 所以初步认为 MqttAsyncClient 是包含了 MqttRxClient 
         Mqtt5AsyncClient client1 = Mqtt5Client.builder().serverAddress(LOCALHOST_EPHEMERAL1).identifier(clientId).buildAsync();
-        
-        
-        
-        
         
         //------------------------------- client connect --------------------------------------
         // 一定要注意 connect之后 如果不用thenAccept之类的方法, 就一定要 让他 等一等 , 等connect成功!!!!!!!!!!!!!!!!
@@ -105,12 +94,9 @@ public class Test3BuildPublishReactive {
     		});
 		*/
 		
-		
-		
-		
 		//------------------------------- client publish --------------------------------------
-        for(int i=0;i<=1000-1;i++) {
-        	String str_content_tmp = content +":"+(i+1);
+		for (int i = 0; i <= 1000 - 1; i++) {
+			String str_content_tmp = content + ":" + (i + 1);
         	/*
         	//------------------------------- 第 A1 种写法 --------------------------------------
         	// 第A1种写法 ref: https://github.com/hivemq/hivemq-mqtt-client 的下面

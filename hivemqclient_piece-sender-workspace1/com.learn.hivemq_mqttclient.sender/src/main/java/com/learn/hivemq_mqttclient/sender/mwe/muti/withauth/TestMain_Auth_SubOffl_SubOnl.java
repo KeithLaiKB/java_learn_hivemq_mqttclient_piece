@@ -1,37 +1,17 @@
-package com.learn.hivemq_mqttclient.sender.mwe.qos;
+package com.learn.hivemq_mqttclient.sender.mwe.muti.withauth;
 
 import java.net.InetSocketAddress;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-
-
-
-import com.hivemq.client.internal.mqtt.MqttRxClient;
-import com.hivemq.client.internal.mqtt.message.publish.MqttPublishBuilder;
 
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
-import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
+import com.hivemq.client.mqtt.mqtt5.message.auth.Mqtt5SimpleAuth;
+import com.hivemq.client.mqtt.mqtt5.message.connect.Mqtt5Connect;
 import com.hivemq.client.mqtt.mqtt5.message.connect.connack.Mqtt5ConnAck;
-import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
-import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder;
-import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilderBase;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishResult;
-/**
- * 
- * 
- * <p>
- * 							description:																			</br>	
- * &emsp;						use different value to publish message each time 									</br>	
- * 																													</br>
- *
- *
- * @author laipl
- *
- */
-public class Test6PublishWithSplitMessages {
 
+public class TestMain_Auth_SubOffl_SubOnl {
 
 	public static void main(String[] args) {
 
@@ -40,13 +20,15 @@ public class Test6PublishWithSplitMessages {
         //String content      = "Message from MqttPublishSample";
         String content      = "你好";
         //String content      = "hi_myfriend";
-        MqttQos qos             = MqttQos.AT_MOST_ONCE;
+        int qos             = 1;
         //String broker       = "tcp://iot.eclipse.org:1883";
         String broker       = "tcp://localhost:1883";
         //String broker       = "ssl://localhost:8883";
         String clientId     = "JavaSample";
         //MemoryPersistence persistence = new MemoryPersistence();
-
+        
+        String myuserName	= "IamPublisherOne";
+        String mypwd		= "123456";
         
         
         
@@ -55,6 +37,12 @@ public class Test6PublishWithSplitMessages {
         
         
         //------------------------------- 创建 mqtt client --------------------------------------
+        /*
+        Mqtt5BlockingClient client = Mqtt5Client.builder()
+                .identifier(UUID.randomUUID().toString())
+                .serverHost("broker.hivemq.com")
+                .buildBlocking();
+        */
         final InetSocketAddress LOCALHOST_EPHEMERAL1 = new InetSocketAddress("localhost",1883);
         //
         //
@@ -68,30 +56,25 @@ public class Test6PublishWithSplitMessages {
         //    this.delegate = delegate;
         // }
         // 所以初步认为 MqttAsyncClient 是包含了 MqttRxClient 
-        Mqtt5AsyncClient client1 = Mqtt5Client.builder().serverAddress(LOCALHOST_EPHEMERAL1).identifier(clientId).buildAsync();
-        
-        
-        
-        
-        
+        //
+        // authentication
+        Mqtt5SimpleAuth simpleAuth = Mqtt5SimpleAuth.builder().username(myuserName).password(mypwd.getBytes()).build();
+        Mqtt5AsyncClient client1 = Mqtt5Client.builder().serverAddress(LOCALHOST_EPHEMERAL1).identifier(clientId).simpleAuth(simpleAuth).buildAsync();
+
         //------------------------------- client connect --------------------------------------
         // 一定要注意 connect之后 如果不用thenAccept之类的方法, 就一定要 让他 等一等 , 等connect成功!!!!!!!!!!!!!!!!
         // 不然刚connect 就去publish 会出现第一条无法publish, 然后成功publish第二条的现象
         // 有点像 MqttAsyncClient sampleClient.connect(connOpts, null, null).waitForCompletion(-1); 需要block自己然后直到连接成功才进行下一步
         // 只是我选择 用段时间等待而已
-        CompletableFuture<Mqtt5ConnAck> cplfu_connect_rslt = client1.connect();
-        //wait
-    	while (cplfu_connect_rslt.isDone() == false) {
-    		// 这里的 sleep 可以不用, 不影响主逻辑
-    		// 只不过 这里加了个 sleep, 可以减少 不停地loop, 因为太多loop会给计算机带来的资源消耗
-    		
-        	try {
-        		Thread.sleep(1000);
-    		} catch (InterruptedException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-    	}
+        //
+        // 然后我选择用clean start 的时候 还需要设置 Mqtt5Connect
+        // ref: https://www.hivemq.com/blog/hivemq-mqtt-client-features/fluent-api/
+        Mqtt5Connect connectMessage = Mqtt5Connect.builder().cleanStart(true).build();
+        
+        //
+        // 因为pahomqtt 我是用的 是不需要等待!!!!!
+        // 例如 broker没打开, 就当做连接失败, 所以这里的connect也不需要做什么, 使用类似的操作就好
+        CompletableFuture<Mqtt5ConnAck> cplfu_connect_rslt =   client1.connect(connectMessage);
 		System.out.println("connected");
 		
 		/*
@@ -111,6 +94,9 @@ public class Test6PublishWithSplitMessages {
 		//------------------------------- client publish --------------------------------------
         for(int i=0;i<=1000-1;i++) {
         	String str_content_tmp = content +":"+(i+1);
+        	//client1.publishWith().topic(topic).qos(MqttQos.AT_LEAST_ONCE).payload(content.getBytes()).send();
+        	
+        	
         	/*
         	//------------------------------- 第 A1 种写法 --------------------------------------
         	// 第A1种写法 ref: https://github.com/hivemq/hivemq-mqtt-client 的下面
@@ -173,10 +159,15 @@ public class Test6PublishWithSplitMessages {
         	// ->MqttPublishBuilder.Send			->  MqttPublishBuilder.Base		-> MqttPublishBuilder
         	// 于是找到了topic(str_topic)的方法
         	com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Send.Complete<CompletableFuture<Mqtt5PublishResult>> c1 = publishBuilder1.topic(topic);
-        	c1.qos(qos);
-        	c1.payload(str_content_tmp.getBytes());
+        	c1.qos(MqttQos.AT_LEAST_ONCE);
+        	/*
+        	 *
+        	 这两个用来删除 Mosquitto里面的reatain message
+        	c1.retain(true);
+        	c1.payload(new byte[0]);
         	
-
+        	*/
+        	c1.payload(str_content_tmp.getBytes());
         	// send(): the result when the built Mqtt5Publish is sent by the parent
         	c1.send();
         	System.out.println(str_content_tmp);
@@ -198,7 +189,7 @@ public class Test6PublishWithSplitMessages {
 			
     		
         	try {
-        		Thread.sleep(5000);
+        		Thread.sleep(1000);
     		} catch (InterruptedException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
