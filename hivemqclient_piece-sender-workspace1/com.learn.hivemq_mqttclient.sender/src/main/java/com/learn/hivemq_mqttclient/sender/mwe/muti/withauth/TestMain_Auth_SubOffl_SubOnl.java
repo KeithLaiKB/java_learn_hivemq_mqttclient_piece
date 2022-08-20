@@ -62,6 +62,17 @@ public class TestMain_Auth_SubOffl_SubOnl {
         Mqtt5AsyncClient client1 = Mqtt5Client.builder().serverAddress(LOCALHOST_EPHEMERAL1).identifier(clientId).simpleAuth(simpleAuth).buildAsync();
 
         //------------------------------- client connect --------------------------------------
+        //
+        // 一共有两种方式进行auth
+        // 第一种 直接在 Mqtt5AsyncClient 	中使用 .simpleAuth(simpleAuth)
+        // 第二种 Mqtt5AsyncClient 		不使用 .simpleAuth(simpleAuth) 
+        //		然而在 Mqtt5Connect 中使用 .simpleAuth(simpleAuth)
+        //			也就是
+        //				Mqtt5Connect connectMessage = Mqtt5Connect.builder().cleanStart(false).sessionExpiryInterval(500).simpleAuth(simpleAuth).build();
+        // 我在这里subscriber 这里尝试 使用 第二种, 当然 使用第一种也是可以的
+        //
+        /////////////////////////////////////////////////
+        //
         // 一定要注意 connect之后 如果不用thenAccept之类的方法, 就一定要 让他 等一等 , 等connect成功!!!!!!!!!!!!!!!!
         // 不然刚connect 就去publish 会出现第一条无法publish, 然后成功publish第二条的现象
         // 有点像 MqttAsyncClient sampleClient.connect(connOpts, null, null).waitForCompletion(-1); 需要block自己然后直到连接成功才进行下一步
