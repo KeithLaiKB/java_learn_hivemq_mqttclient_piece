@@ -142,6 +142,8 @@ public class TestMain_Auth_SubOffl_SubOnl {
 		
 		
 		
+		/*
+		//hivemqtt client 不用这段
 		
 		// finally, create SSL socket factory
 		SSLContext context=null;
@@ -162,7 +164,7 @@ public class TestMain_Auth_SubOffl_SubOnl {
 		e.printStackTrace();
 		}
 		mysocketFactory = context.getSocketFactory();
-		        
+		*/        
         
         //
         /*
@@ -230,6 +232,7 @@ public class TestMain_Auth_SubOffl_SubOnl {
         mqttClientBuilder.sslConfig(MqttClientSslConfig.builder()
                       .keyManagerFactory(null)
                       .trustManagerFactory(tmf)		//.hostnameVerifier(hostnameVerifier)
+                      .protocols(Arrays.asList("TLSv1.3"))		//这里指定TLSv1.3
                       .hostnameVerifier(new HostnameVerifier() {
                           public boolean verify(String s, SSLSession sslSession) {
                               return true;

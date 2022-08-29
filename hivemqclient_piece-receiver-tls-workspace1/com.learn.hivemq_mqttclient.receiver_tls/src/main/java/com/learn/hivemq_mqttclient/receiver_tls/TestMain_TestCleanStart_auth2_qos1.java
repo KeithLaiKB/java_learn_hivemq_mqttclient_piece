@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -136,6 +137,8 @@ public class TestMain_TestCleanStart_auth2_qos1 {
 		
 		
 		
+		/*
+		//hivemqtt client 不用这段
 		
 		// finally, create SSL socket factory
 		SSLContext context=null;
@@ -156,7 +159,7 @@ public class TestMain_TestCleanStart_auth2_qos1 {
 		e.printStackTrace();
 		}
 		mysocketFactory = context.getSocketFactory();
-		        
+		*/        
         
         //
         
@@ -197,6 +200,7 @@ public class TestMain_TestCleanStart_auth2_qos1 {
         mqttClientBuilder.sslConfig(MqttClientSslConfig.builder()
                       .keyManagerFactory(null)
                       .trustManagerFactory(tmf)		//.hostnameVerifier(hostnameVerifier)
+                      .protocols(Arrays.asList("TLSv1.3"))		//这里指定TLSv1.3
                       .hostnameVerifier(new HostnameVerifier() {
                           public boolean verify(String s, SSLSession sslSession) {
                               return true;
