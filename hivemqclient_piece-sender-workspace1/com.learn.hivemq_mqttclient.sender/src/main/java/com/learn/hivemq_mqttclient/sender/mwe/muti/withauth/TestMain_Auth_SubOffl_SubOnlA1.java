@@ -9,9 +9,10 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 import com.hivemq.client.mqtt.mqtt5.message.auth.Mqtt5SimpleAuth;
 import com.hivemq.client.mqtt.mqtt5.message.connect.Mqtt5Connect;
 import com.hivemq.client.mqtt.mqtt5.message.connect.connack.Mqtt5ConnAck;
+import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishResult;
 
-public class TestMain_Auth_SubOffl_SubOnl {
+public class TestMain_Auth_SubOffl_SubOnlA1 {
 
 	public static void main(String[] args) {
 
@@ -109,96 +110,17 @@ public class TestMain_Auth_SubOffl_SubOnl {
         	//client1.publishWith().topic(topic).qos(MqttQos.AT_LEAST_ONCE).payload(content.getBytes()).send();
         	
         	
-        	/*
+        	
         	//------------------------------- 第 A1 种写法 --------------------------------------
         	// 第A1种写法 ref: https://github.com/hivemq/hivemq-mqtt-client 的下面
         	Mqtt5Publish publishMessage = Mqtt5Publish.builder()
         	        .topic(topic)
         	        .qos(MqttQos.AT_LEAST_ONCE)
-        	        .payload(contentTmp.getBytes())
+        	        .payload(str_content_tmp.getBytes())
         	        .build();
         	client1.publish(publishMessage);
-        	*/
-        	//
-        	//
-        	//
-        	//
-        	//------------------------------- 第 A2 种写法 --------------------------------------
-        	// 第A2种写法 是A1写法的拆分而已
-        	/*
-        	Mqtt5PublishBuilder publishBuilder1= Mqtt5Publish.builder();
-        	//
-        	com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Complete c1 = publishBuilder1.topic(topic);
-        	c1.qos(MqttQos.AT_LEAST_ONCE);
-        	c1.payload(str_content_tmp.getBytes());
-        	//
-        	Mqtt5Publish publishMessage = c1.build();
-        	client1.publish(publishMessage);
-        	System.out.println(str_content_tmp);
-        	*/
-        	//
-        	/*
-        	//A2方法中的 
-        	// client1.publish(publishMessage); 
-        	// 和  
-        	// System.out.println(str_content_tmp); 
-        	// 可以换成下面这种, 看起来更清晰一些 
-        	client1.publish(publishMessage).thenAccept((result)->{
-        		String sendedCtnTemp = new String(result.getPublish().getPayloadAsBytes());		//如果用 Qos0(MqttQos.AT_MOST_ONCE) 也可以获得内容的
-        		System.out.println(sendedCtnTemp);
-        		
-        		});
-        	*/
-        	//
-        	//
-        	//
-        	//
-        	//------------------------------- 第 B1 种写法 --------------------------------------
-        	// 第B1种写法 ref: hivemq-mqtt-client/examples/src/main/java/com/hivemq/client/mqtt/examples/Mqtt5Features.java / 
-        	// 这个是一口气就能写完的, 这种 和 A1和A2的调用效果是一样的  因为他说 Fluent counterpart of publish(Mqtt5Publish)
-        	/*client1.publishWith().topic(topic).qos(MqttQos.AT_LEAST_ONCE).payload(str_content_tmp.getBytes()).send();*/
-        	//
-        	//
-        	//
-        	//
-        	//------------------------------- 第 B2 种写法 --------------------------------------
-        	
-        	// 第B2种写法 ref: hivemq-mqtt-client/examples/src/main/java/com/hivemq/client/mqtt/examples/Mqtt5Features.java / 
-        	// 首先这里先用了 pulishWith();
-        	// 因为 MqttPublishBuilder.Send<P> -> Mqtt5PublishBuilder.Send.Complete<P> -> Mqtt5PublishBuilder.Send<P>
-        	com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Send<CompletableFuture<Mqtt5PublishResult>>  publishBuilder1 = client1.publishWith();
-        	// 因为Mqtt5PublishBuilder.Send.Complete 	->  Mqtt5PublishBuilder.Send	-> Mqtt5PublishBuilderBase 
-        	// ->MqttPublishBuilder.Send			->  MqttPublishBuilder.Base		-> MqttPublishBuilder
-        	// 于是找到了topic(str_topic)的方法
-        	com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5PublishBuilder.Send.Complete<CompletableFuture<Mqtt5PublishResult>> c1 = publishBuilder1.topic(topic);
-        	c1.qos(MqttQos.AT_LEAST_ONCE);
-        	/*
-        	 *
-        	 这两个用来删除 Mosquitto里面的reatain message
-        	c1.retain(true);
-        	c1.payload(new byte[0]);
-        	
-        	*/
-        	c1.payload(str_content_tmp.getBytes());
-        	// send(): the result when the built Mqtt5Publish is sent by the parent
-        	c1.send();
-        	System.out.println(str_content_tmp);
         	
         	
-        	
-        	/*
-        	//B2方法中 
-        	// c1.send(); 
-        	// 和   
-        	// System.out.println(str_content_tmp); 
-        	// 可以换成下面这种, 看起来更清晰一些
-        	c1.send().thenAccept((result)->{
-        		String sendedCtnTemp = new String(result.getPublish().getPayloadAsBytes());		//如果用 Qos0(MqttQos.AT_MOST_ONCE) 也可以获得内容的
-        		System.out.println(sendedCtnTemp);
-        		
-        		});
-        	*/
-			
     		
         	try {
         		Thread.sleep(1000);
