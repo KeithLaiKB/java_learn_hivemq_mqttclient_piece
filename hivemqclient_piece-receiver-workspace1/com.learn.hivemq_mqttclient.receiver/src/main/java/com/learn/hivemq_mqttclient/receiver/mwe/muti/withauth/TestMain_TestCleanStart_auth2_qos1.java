@@ -27,7 +27,7 @@ public class TestMain_TestCleanStart_auth2_qos1 {
         //String broker       = "tcp://iot.eclipse.org:1883";
         String broker       = "tcp://localhost:1883";
         //String clientId     = "JavaSample";
-        String clientId     = "JavaSample_revcevier";
+        String clientId     = "JavaSample_recver";
         //MemoryPersistence persistence = new MemoryPersistence();
         
         

@@ -26,7 +26,7 @@ public class TestMain_Auth_SubOffl_SubOnlA1 {
         //String broker       = "tcp://iot.eclipse.org:1883";
         String broker       = "tcp://localhost:1883";
         //String broker       = "ssl://localhost:8883";
-        String clientId     = "JavaSample";
+        String clientId     = "JavaSample_sender";
         //MemoryPersistence persistence = new MemoryPersistence();
         
         String myuserName	= "IamPublisherOne";
