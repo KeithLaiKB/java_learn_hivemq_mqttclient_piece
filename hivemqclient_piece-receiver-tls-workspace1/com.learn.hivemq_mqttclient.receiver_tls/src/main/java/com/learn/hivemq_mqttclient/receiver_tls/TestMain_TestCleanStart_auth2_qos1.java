@@ -53,7 +53,7 @@ public class TestMain_TestCleanStart_auth2_qos1 {
         //String brokerUri    = "ssl://127.0.0.1:8883";				//我发现ca是noname servercrt虽然设置的是192.168.239.137:8883 但是还是可以用127.0.0.1来访问
         
         //String clientId     = "JavaSample";
-        String clientId     = "JavaSample_revcevier";
+        String clientId     = "JavaSample_recver";
         
         String myuserName	= "IamPublisherOne";
         String mypwd		= "123456";
@@ -110,16 +110,16 @@ public class TestMain_TestCleanStart_auth2_qos1 {
 		KeyStore keyStore=null;
 		TrustManagerFactory tmf = null;
 		try {
-		// Create a KeyStore containing our trusted CAs
-		keyStoreType = KeyStore.getDefaultType();
-		keyStore = KeyStore.getInstance(keyStoreType);
-		keyStore.load(null, null);
-		keyStore.setCertificateEntry("ca", ca);
-		
-		// Create a TrustManager that trusts the CAs in our KeyStore
-		String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-		tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-		tmf.init(keyStore);
+			// Create a KeyStore containing our trusted CAs
+			keyStoreType = KeyStore.getDefaultType();
+			keyStore = KeyStore.getInstance(keyStoreType);
+			keyStore.load(null, null);
+			keyStore.setCertificateEntry("ca", ca);
+			
+			// Create a TrustManager that trusts the CAs in our KeyStore
+			String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+			tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+			tmf.init(keyStore);
 		} catch (KeyStoreException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
